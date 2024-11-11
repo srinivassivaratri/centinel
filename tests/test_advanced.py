@@ -1,6 +1,6 @@
 import pytest
 from decimal import Decimal
-from centinel import Money, Currency, AdvancedOperations, RoundingPolicy
+from centinel import Money, Currency, AdvancedOperations
 
 def test_compound_interest():
     principal = Money(1000, Currency.USD)
@@ -11,21 +11,6 @@ def test_percentage_calculation():
     amount = Money(200, Currency.USD)
     result = AdvancedOperations.percentage_of(amount, 15)
     assert result.amount == 30.0
-
-def test_rounding_policies():
-    amount = Money(100.126, Currency.USD)
-    
-    # Test HALF_UP
-    rounded = AdvancedOperations.apply_rounding(amount, RoundingPolicy.HALF_UP)
-    assert rounded.amount == 100.13
-    
-    # Test DOWN
-    rounded = AdvancedOperations.apply_rounding(amount, RoundingPolicy.DOWN)
-    assert rounded.amount == 100.12
-    
-    # Test UP
-    rounded = AdvancedOperations.apply_rounding(amount, RoundingPolicy.UP)
-    assert rounded.amount == 100.13
 
 def test_financial_ratios():
     # Test profit margin

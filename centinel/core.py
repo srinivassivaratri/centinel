@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Union, Optional
+from decimal import Decimal, ROUND_HALF_UP
 from .exceptions import MoneyOverflowError, InvalidAmountError
 from .currency import Currency
 
@@ -17,7 +18,7 @@ class Money:
     MAX_VALUE = 2_147_483_647  # Maximum value for 4-byte signed integer
     MIN_VALUE = -2_147_483_648
 
-    def __init__(self, amount: Union[int, float], currency: Currency):
+    def __init__(self, amount: Union[int, float, Decimal], currency: Currency):
         """
         Initialize Money object with amount and currency.
         
@@ -25,24 +26,28 @@ class Money:
             amount: Amount in currency units (e.g., dollars)
             currency: Currency enum value
         """
-        # Convert to smallest currency unit
-        if isinstance(amount, float):
-            amount = round(amount * 100)
-        elif isinstance(amount, int):
-            amount *= 100
-        else:
+        # Convert to Decimal for precise rounding
+        if isinstance(amount, (int, float)):
+            amount = Decimal(str(amount))
+        elif not isinstance(amount, Decimal):
             raise InvalidAmountError("Amount must be numeric")
 
-        if not self.MIN_VALUE <= amount <= self.MAX_VALUE:
+        # Round to 2 decimal places using ROUND_HALF_UP
+        amount = amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        
+        # Convert to smallest currency unit (cents)
+        amount_cents = int(amount * 100)
+
+        if not self.MIN_VALUE <= amount_cents <= self.MAX_VALUE:
             raise MoneyOverflowError("Amount exceeds 4-byte integer limits")
 
-        self._amount = amount
+        self._amount = amount_cents
         self._currency = currency
 
     @property
     def amount(self) -> float:
         """Get amount in currency units."""
-        return self._amount / 100
+        return float(Decimal(self._amount) / 100)
 
     @property
     def currency(self) -> Currency:

@@ -1,14 +1,8 @@
 from typing import List, Union, Optional
-from decimal import Decimal, ROUND_HALF_UP, ROUND_DOWN, ROUND_UP
-from enum import Enum
+from decimal import Decimal
 from .core import Money
 from .currency import Currency
 from .exceptions import InvalidAmountError
-
-class RoundingPolicy(Enum):
-    HALF_UP = "HALF_UP"
-    DOWN = "DOWN"
-    UP = "UP"
 
 class AdvancedOperations:
     @staticmethod
@@ -42,34 +36,6 @@ class AdvancedOperations:
         return amount * (percentage / 100)
 
     @staticmethod
-    def apply_rounding(
-        amount: Money,
-        policy: RoundingPolicy,
-        precision: int = 2
-    ) -> Money:
-        """
-        Apply specific rounding policy to amount.
-        
-        Args:
-            amount: Amount to round
-            policy: Rounding policy to apply
-            precision: Number of decimal places
-        """
-        decimal_amount = Decimal(str(amount.amount))
-        
-        rounding_map = {
-            RoundingPolicy.HALF_UP: ROUND_HALF_UP,
-            RoundingPolicy.DOWN: ROUND_DOWN,
-            RoundingPolicy.UP: ROUND_UP
-        }
-        
-        rounded = decimal_amount.quantize(
-            Decimal('0.1') ** precision,
-            rounding=rounding_map[policy]
-        )
-        return Money(float(rounded), amount.currency)
-
-    @staticmethod
     def profit_margin(revenue: Money, costs: Money) -> float:
         """Calculate profit margin ratio."""
         if revenue.currency != costs.currency:
@@ -91,7 +57,7 @@ class AdvancedOperations:
     def batch_operation(
         amounts: List[Money],
         operation: str = "sum"
-    ) -> Union[Money, List[Money]]:
+    ) -> Money:
         """
         Perform batch operations on multiple money amounts.
         
@@ -115,7 +81,7 @@ class AdvancedOperations:
             
         elif operation == "average":
             total = AdvancedOperations.batch_operation(amounts, "sum")
-            return total / len(amounts)
+            return Money(total.amount / len(amounts), total.currency)
             
         elif operation == "max":
             return max(amounts, key=lambda x: x.amount)

@@ -1,6 +1,6 @@
 from rich.console import Console
 from rich.table import Table
-from centinel import Money, Currency, convert, AdvancedOperations, RoundingPolicy
+from centinel import Money, Currency, convert, AdvancedOperations
 
 console = Console()
 
@@ -56,13 +56,6 @@ def demonstrate_advanced_operations():
     amount = Money(200, Currency.USD)
     percentage_result = AdvancedOperations.percentage_of(amount, 15)
     console.print(f"15% of {amount} = {percentage_result}")
-    
-    # Rounding Policies
-    amount = Money(100.126, Currency.USD)
-    console.print("\nRounding Policies:")
-    for policy in RoundingPolicy:
-        rounded = AdvancedOperations.apply_rounding(amount, policy)
-        console.print(f"{policy.value}: {amount} → {rounded}")
     
     # Financial Ratios
     revenue = Money(1000, Currency.USD)
