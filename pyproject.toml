@@ -1,0 +1,9 @@
+[project]
+name = "centinel"
+version = "0.1.0"
+description = "High-precision monetary operations library using 4-byte integer representation"
+requires-python = ">=3.11"
+dependencies = [
+    "pytest>=8.3.3",
+    "rich>=13.9.4",
+]

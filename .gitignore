@@ -1,0 +1,15 @@
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.pythonlibs/
+.upm/
+.git/
+.replit.backup
+replit.nix
+.config/
+.local/
+poetry.lock
+.coverage
+htmlcov/
+.DS_Store
