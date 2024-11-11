@@ -22,6 +22,12 @@ A high-precision financial calculation library implementing 4-byte integer repre
 pip install centinel
 ```
 
+## Requirements
+
+- Python 3.11 or higher
+- pytest (for running tests)
+- rich (for example outputs)
+
 ## Quick Start
 
 ```python
@@ -128,12 +134,61 @@ except CurrencyMismatchError:
     print("Cannot add different currencies directly")
 ```
 
-## Configuration Options
+## Configuration
 
-- Configurable rounding policies (HALF_UP, DOWN, UP)
-- Custom exchange rate providers
-- Batch operation settings
-- Performance optimization toggles
+### Exchange Rate Provider
+
+```python
+from centinel import ExchangeRateProvider
+
+class CustomProvider(ExchangeRateProvider):
+    def get_rate(self, from_currency: Currency, to_currency: Currency) -> float:
+        # Implement custom rate fetching logic
+        pass
+
+# Use custom provider
+set_exchange_rate_provider(CustomProvider())
+```
+
+### Performance Settings
+
+```python
+from centinel import configure_performance
+
+configure_performance(
+    enable_caching=True,
+    pool_size=1000,
+    batch_size=100,
+    max_threads=4
+)
+```
+
+## Development
+
+### Setting Up Development Environment
+
+1. Clone the repository
+```bash
+git clone https://github.com/username/centinel.git
+cd centinel
+```
+
+2. Install dependencies
+```bash
+pip install -e ".[dev]"
+```
+
+3. Run tests
+```bash
+pytest tests/
+```
+
+### Running Examples
+
+```bash
+python examples.py  # Basic examples
+python examples_optimized.py  # Performance optimization examples
+```
 
 ## Contributing
 
@@ -158,3 +213,9 @@ Based on our performance tests with 100,000 operations:
 - Concurrent Batch Addition: ~0.039s
 
 This represents a 2.5x performance improvement using optimized operations.
+
+## Support
+
+- [Issue Tracker](https://github.com/username/centinel/issues)
+- [Documentation](https://centinel.readthedocs.io/)
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/centinel)
